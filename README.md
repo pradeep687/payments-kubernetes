@@ -8,6 +8,7 @@ The application is deployed on Kubernetes and exposed through a NodePort service
 https://1f43f5d7da9c-10-244-1-186-31263.papa.r.killercoda.com/
 
 The application is accessible through the above Killercoda public endpoint.
+Note: The above endpoint is running on a temporary Killercoda environment and may become unavailable after the session expires.
 
 
 
