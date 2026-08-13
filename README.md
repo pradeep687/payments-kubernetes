@@ -16,9 +16,29 @@ Note: The above endpoint is running on a temporary Killercoda environment and ma
 
 The Payments application consists of the following components:
 
-* **web-frontend** – Exposed externally using Kubernetes NodePort
-* **payment-gateway** – Internal ClusterIP service
-* **order-processor** – Internal ClusterIP service
+* **web-frontend** – Exposed externally using a Kubernetes NodePort service.
+* **order-processor** – Internal ClusterIP service responsible for processing orders.
+* **payment-gateway** – Internal ClusterIP service handling payment processing.
+
+### Secure Communication Flow
+
+NetworkPolicies restrict service-to-service communication to the following flow:
+
+```text
+web-frontend
+      |
+      v
+order-processor
+      |
+      v
+payment-gateway
+```
+
+* `web-frontend` can communicate with `order-processor`.
+* `order-processor` can communicate with `payment-gateway`.
+* `payment-gateway` only accepts traffic from `order-processor`.
+* The payment gateway is not directly exposed externally.
+
 
 ### Pods
 
