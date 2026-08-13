@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-frontend
+  labels:
+    {{- include "payments.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.webFrontend.service.type }}
+  selector:
+    app: web-frontend
+  ports:
+    - name: http
+      port: {{ .Values.webFrontend.service.port }}
+      targetPort: {{ .Values.webFrontend.service.targetPort }}
+      protocol: TCP
+      {{- if eq .Values.webFrontend.service.type "NodePort" }}
+      nodePort: {{ .Values.webFrontend.service.nodePort }}
+      {{- end }}

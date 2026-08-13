@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-processor
+  labels:
+    {{- include "payments.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.orderProcessor.service.type }}
+  selector:
+    app: order-processor
+  ports:
+    - name: http
+      port: {{ .Values.orderProcessor.service.port }}
+      targetPort: {{ .Values.orderProcessor.service.targetPort }}
+      protocol: TCP

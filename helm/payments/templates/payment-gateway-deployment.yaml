@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-gateway
+  labels:
+    {{- include "payments.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.paymentGateway.replicaCount }}
+
+  selector:
+    matchLabels:
+      app: payment-gateway
+
+  template:
+    metadata:
+      labels:
+        app: payment-gateway
+
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+
+      containers:
+        - name: payment-gateway
+          image: "{{ .Values.paymentGateway.image.repository }}:{{ .Values.paymentGateway.image.tag }}"
+          imagePullPolicy: {{ .Values.paymentGateway.image.pullPolicy }}
+
+          command:
+            - sleep
+            - "3600"
+
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+
+          resources:
+            {{- toYaml .Values.paymentGateway.resources | nindent 12 }}
+
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - "ps"
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - "ps"
+            initialDelaySeconds: 5
+            periodSeconds: 5
