@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-processor
+  labels:
+    app: order-processor
+    {{- include "payments.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.orderProcessor.replicaCount }}
+  selector:
+    matchLabels:
+      app: order-processor
+  template:
+    metadata:
+      annotations:
+        checksum/db-secret: {{- $secret := lookup "v1" "Secret" .Release.Namespace "db-secret" -}}{{- if $secret }}{{ $secret.data | toJson | sha256sum }}{{ else }}initial{{ end }}
+      labels:
+        app: order-processor
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+
+      containers:
+        - name: order-processor
+          image: "{{ .Values.orderProcessor.image.repository }}:{{ .Values.orderProcessor.image.tag }}"
+          imagePullPolicy: {{ .Values.orderProcessor.image.pullPolicy }}
+
+          command:
+            - python
+            - -m
+            - http.server
+            - "8080"
+
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+
+          resources:
+            {{- toYaml .Values.orderProcessor.resources | nindent 12 }}
+
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_PASSWORD
+
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+
+      volumes:
+        - name: tmp
+          emptyDir: {}

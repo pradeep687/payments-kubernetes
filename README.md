@@ -1,41 +1,55 @@
-# Payments Kubernetes Assignment
+# Secure Payments Kubernetes Deployment
 
 ## Overview
 
-This project demonstrates deploying three applications on Kubernetes:
+This project implements a secure, modular Helm-based Kubernetes deployment
+for three microservices:
 
-- Web Frontend
-- Payment Gateway
-- Order Processor
+- web-frontend
+- order-processor
+- payment-gateway
 
-Each application is deployed using a Kubernetes Deployment and exposed using a NodePort Service.
+The solution applies DevSecOps and Kubernetes security best practices,
+including container hardening, network segmentation, resource controls,
+secret management and automated secret synchronization.
 
 ## Architecture
 
-User
- |
- v
-Web Frontend
- |
- v
-Payment Gateway
- |
- v
-Order Processor
+```text
+                    Internet
+                       |
+                       v
+              +----------------+
+              |  web-frontend  |
+              |    NodePort    |
+              +----------------+
+                       |
+                 NetworkPolicy
+                       |
+                       v
+              +------------------+
+              | order-processor  |
+              |    ClusterIP     |
+              +------------------+
+                       |
+                 NetworkPolicy
+                       |
+                       v
+              +------------------+
+              | payment-gateway |
+              |    ClusterIP     |
+              +------------------+
 
-## Components
-
-| Application | Deployment | Service | NodePort |
-|---|---|---|---|
-| Web Frontend | web-frontend | web-frontend | 31263 |
-| Payment Gateway | payment-gateway | payment-gateway | 31972 |
-| Order Processor | order-processor | order-processor | 31343 |
-
-## Deployment
-
-Apply the deployments:
-
-```bash
-kubectl apply -f web-frontend.yaml
-kubectl apply -f payment-gateway.yaml
-kubectl apply -f order-processor.yaml
+External Secrets Operator
+          |
+          v
+      SecretStore
+          |
+          v
+     ExternalSecret
+          |
+          v
+       db-secret
+          |
+          v
+   order-processor
