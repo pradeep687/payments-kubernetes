@@ -85,3 +85,4 @@ The request returned the Nginx welcome page, confirming that the NodePort, Kuber
 
 <img width="776" height="407" alt="image" src="https://github.com/user-attachments/assets/dad9d40f-5842-460a-bf87-1ff635b8026c" />
 
+<img width="926" height="450" alt="image" src="https://github.com/user-attachments/assets/1240db7d-64ad-4fa4-b578-36fbe7c8a250" />
