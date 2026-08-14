@@ -6,6 +6,7 @@ The application is deployed on Kubernetes and exposed through a NodePort service
 
 **Live Application URL:**
 https://1f43f5d7da9c-10-244-1-186-31263.papa.r.killercoda.com/
+<img width="1329" height="533" alt="image" src="https://github.com/user-attachments/assets/df7580f7-71bc-43f1-a4d3-08b4be0940dd" />
 
 The application is accessible through the above Killercoda public endpoint.
 Note: The above endpoint is running on a temporary Killercoda environment and may become unavailable after the session expires. So attached the screenshots below at the end.
