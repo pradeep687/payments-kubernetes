@@ -6,6 +6,7 @@ The application is deployed on Kubernetes and exposed through a NodePort service
 
 **Live Application URL:**
 https://1f43f5d7da9c-10-244-1-186-31263.papa.r.killercoda.com/
+
 <img width="1329" height="533" alt="image" src="https://github.com/user-attachments/assets/df7580f7-71bc-43f1-a4d3-08b4be0940dd" />
 
 The application is accessible through the above Killercoda public endpoint.
@@ -45,39 +46,51 @@ payment-gateway
 
 All application pods are running successfully:
 
+```text
 root@controlplane:~/payments-kubernetes/helm/payments$ kubectl get pods
-NAME                               READY   STATUS    RESTARTS   AGE
-order-processor-f95454695-zqf5f    1/1     Running   0          14m
-payment-gateway-84ccbbdcff-22s77   1/1     Running   0          17m
-web-frontend-5df46cd84b-vvwd9      1/1     Running   0          17m
+
+NAME                                READY   STATUS    RESTARTS   AGE
+order-processor-f95454695-zqf5f     1/1     Running   0          14m
+payment-gateway-84ccbbdcff-22s77     1/1     Running   0          17m
+web-frontend-5df46cd84b-vvwd9        1/1     Running   0          17m
+```
 
 ### Services
 
+```text
 root@controlplane:~/payments-kubernetes/helm/payments$ kubectl get svc
-NAME              TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
-kubernetes        ClusterIP   10.96.0.1        <none>        443/TCP        23d
-order-processor   ClusterIP   10.96.245.134    <none>        8080/TCP       17m
-payment-gateway   ClusterIP   10.109.153.123   <none>        8080/TCP       17m
-web-frontend      NodePort    10.98.183.38     <none>        80:31263/TCP   17m
+
+NAME               TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+kubernetes         ClusterIP   10.96.0.1       <none>        443/TCP          23d
+order-processor    ClusterIP   10.96.245.134   <none>        8080/TCP         17m
+payment-gateway    ClusterIP   10.109.153.123   <none>        8080/TCP         17m
+web-frontend       NodePort    10.98.183.38     <none>        80:31263/TCP     17m
+```
 
 The `web-frontend` service is exposed externally using **NodePort 31263**.
 
 ### Deployments
 
+```text
 root@controlplane:~/payments-kubernetes/helm/payments$ kubectl get deployments
+
 NAME              READY   UP-TO-DATE   AVAILABLE   AGE
 order-processor   1/1     1            1           14m
 payment-gateway   1/1     1            1           17m
 web-frontend      1/1     1            1           17m
+```
 
 
 ### Helm Release
 
 The application was deployed using Helm.
 
+```text
 root@controlplane:~/payments-kubernetes/helm/payments$ helm list
-NAME            NAMESPACE       REVISION        UPDATED                                 STATUS          CHART           APP VERSION
-payments        default         2               2026-08-13 18:45:17.384743285 +0000 UTC deployed        payments-0.1.0  1.0.0   
+
+NAME       NAMESPACE   REVISION   UPDATED                                  STATUS     CHART           APP VERSION
+payments   default     2          2026-08-13 18:45:17.384743285 +0000 UTC   deployed   payments-0.1.0   1.0.0
+```
 
 **Helm Release:** `payments`
 **Chart Version:** `payments-0.1.0`
